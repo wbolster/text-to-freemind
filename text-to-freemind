@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+from xml.sax.saxutils import quoteattr
+
+def load_nodes_from_file(filename):
+
+    # read all lines and get the indent
+    lines_with_level = []
+    for line in file(filename):
+
+        # skip empty lines
+        if not line.strip(): continue
+
+        # skip comments
+        if line.startswith('#'): continue
+
+        level = 0
+        while line.startswith('\t'):
+            level +=1
+            line = line[1:]
+        line = line.rstrip()
+        lines_with_level.append((level, line))
+
+    # now we have a list of (level, line) tuples.
+    # just loop over it and do magic xml thingies :)
+
+    curlevel = 0
+    print '<map>'
+    for level, line in lines_with_level:
+        line = quoteattr(line)
+        if level > curlevel:
+            # child
+            print '<node text=%s>' % line
+            pass
+        elif level == curlevel:
+            if level != 0:
+                print '</node>'
+            print '<node text=%s>' % line
+            # sibling
+        else:
+            # 'aunt'
+            print '</node>\n' * (curlevel - level + 1),
+            print '<node text=%s>' % line
+            pass
+
+        curlevel = level
+
+    print '</node>\n' * (curlevel),
+    print '</map>'
+
+if __name__ == '__main__':
+
+    import sys
+    try:
+        filename = sys.argv[1]
+    except IndexError:
+        print "Please specify a filename"
+        sys.exit(1)
+    else:
+        load_nodes_from_file(filename)
