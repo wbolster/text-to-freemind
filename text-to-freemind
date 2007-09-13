@@ -1,60 +1,124 @@
 #!/usr/bin/env python
+#
+# This program converts tab-indented text files into an XML format suitable for
+# reading by Freemind.
+#
+# Copyright  2006--2007  Wouter Bolsterlee <uws@xs4all.nl>
+#
+# This program is distributed under the GPL v2 (or later) license.
+#
 
-from xml.sax.saxutils import quoteattr
+import sys
 
-def load_nodes_from_file(filename):
+
+def bailout(msg, line=None):
+    if line is not None:
+        sys.stderr.write('Error (line %d): %s\n' % (line, msg))
+    else:
+        sys.stderr.write('Error: %s\n' % msg)
+    sys.exit(1)
+
+
+# Try to load a suitable celementtree incarnation. This is supposed to work for
+# both Python 2.4 (both python and C version) and Python 2.5
+try:
+    import xml.etree.ElementTree as et # python 2.5
+except ImportError:
+    try:
+        import cElementTree as et # python 2.4 celementtree
+    except ImportError:
+        import elementtree.ElementTree as et # python 2.4 elementtree
+
+try:
+    et
+except NameError:
+    bailout('No suitable ElementTree package found. Install python-elementtree (default in python 2.5).')
+
+
+def convert_lines_into_mm(lines, out_fp):
 
     # read all lines and get the indent
     lines_with_level = []
-    for line in file(filename):
+    toplevel_seen = False
 
-        # skip empty lines
+    level = 0
+    oldlevel = 0
+    line_no = 0
+    for line in lines:
+        line_no += 1
+        oldlevel = level
+
+        # Skip empty lines
         if not line.strip(): continue
 
-        # skip comments
+        # Skip comments
         if line.startswith('#'): continue
+        if line.startswith('//'): continue
+
+
+        if toplevel_seen and not line.startswith('\t'):
+            bailout('All lines except for the first should start with a tab.', line_no)
 
         level = 0
         while line.startswith('\t'):
             level +=1
             line = line[1:]
+
+        if level - oldlevel > 1:
+            bailout('Cannot indent more than one level at a time.', line_no)
+
+        if level == 0:
+            toplevel_seen = True
+
         line = line.rstrip()
         lines_with_level.append((level, line))
 
     # now we have a list of (level, line) tuples.
     # just loop over it and do magic xml thingies :)
 
-    curlevel = 0
-    print '<map>'
+    curlevel = -1
+    topnode = et.Element('map')
+    curpath = [topnode]
+    lastnode = None
     for level, line in lines_with_level:
-        line = quoteattr(line)
-        if level > curlevel:
-            # child
-            print '<node text=%s>' % line
-            pass
-        elif level == curlevel:
-            if level != 0:
-                print '</node>'
-            print '<node text=%s>' % line
-            # sibling
+        if level == curlevel:
+            # Add element as sibling to the current path. This means tail of
+            # the path is replace by a new node.
+            n = et.SubElement(curpath[-2], 'node')
+            n.set('text', line)
+            curpath[-1] = n
+        elif level > curlevel:
+            # Add child element to current node.
+            n = et.SubElement(curpath[-1], 'node')
+            curpath.append(n)
+            n.set('text', line)
         else:
-            # 'aunt'
-            print '</node>\n' * (curlevel - level + 1),
-            print '<node text=%s>' % line
-            pass
-
+            # One ore more levels up the tree. Pop items from the current path
+            # and add a new node.
+            for i in xrange(curlevel - level + 1):
+                curpath.pop(-1)
+            n = et.SubElement(curpath[-1], 'node')
+            curpath.append(n)
+            n.set('text', line)
+            
         curlevel = level
 
-    print '</node>\n' * (curlevel),
-    print '</map>'
+    tree = et.ElementTree(topnode)
+    tree.write(out_fp, 'utf-8')
+    out_fp.write('\n')
+
 
 if __name__ == '__main__':
-
-    import sys
     try:
         filename = sys.argv[1]
+        if filename == '-':
+            # stdin
+            lines = [line for line in sys.stdin.readlines()]
+        else:
+            # user-specified filename
+            lines = [line for line in file(filename)]
     except IndexError:
-        print "Please specify a filename"
-        sys.exit(1)
-    else:
-        load_nodes_from_file(filename)
+        # stdin
+        lines = [line for line in sys.stdin.readlines()]
+
+    convert_lines_into_mm(lines, sys.stdout)
