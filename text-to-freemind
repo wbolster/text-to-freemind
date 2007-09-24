@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 #
-# This program converts tab-indented text files into an XML format suitable for
-# reading by Freemind.
+# A simple text to freemind conversion program
 #
-# Copyright  2006--2007  Wouter Bolsterlee <uws@xs4all.nl>
-#
-# This program is distributed under the GPL v2 (or later) license.
+# See README for copyright and licensing information.
 #
 
 import sys, time
