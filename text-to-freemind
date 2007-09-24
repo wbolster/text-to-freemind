@@ -8,7 +8,7 @@
 # This program is distributed under the GPL v2 (or later) license.
 #
 
-import sys
+import sys, time
 
 
 def bailout(msg, line=None):
@@ -34,6 +34,13 @@ try:
 except NameError:
     bailout('No suitable ElementTree package found. Install python-elementtree (default in python 2.5).')
 
+
+creation_time = str(int(time.time() * 1000))
+
+def set_node_properties(node, text):
+    node.set('TEXT', text)
+    node.set('CREATED', creation_time)
+    node.set('MODIFIED', creation_time)
 
 def convert_lines_into_mm(lines, out_fp):
 
@@ -85,13 +92,13 @@ def convert_lines_into_mm(lines, out_fp):
             # Add element as sibling to the current path. This means tail of
             # the path is replace by a new node.
             n = et.SubElement(curpath[-2], 'node')
-            n.set('text', line)
+            set_node_properties(n, line)
             curpath[-1] = n
         elif level > curlevel:
             # Add child element to current node.
             n = et.SubElement(curpath[-1], 'node')
             curpath.append(n)
-            n.set('text', line)
+            set_node_properties(n, line)
         else:
             # One ore more levels up the tree. Pop items from the current path
             # and add a new node.
@@ -99,7 +106,7 @@ def convert_lines_into_mm(lines, out_fp):
                 curpath.pop(-1)
             n = et.SubElement(curpath[-1], 'node')
             curpath.append(n)
-            n.set('text', line)
+            set_node_properties(n, line)
             
         curlevel = level
 
