@@ -38,6 +38,17 @@ A Makefile snippet is also included to convert all *.mm.txt files into their
   $ /path/to/text-to-freemind/text-to-freemind.make
 
 
+Requirements
+============
+
+The conversion program is written in Python (tested with 2.4 and 2.5) and
+requires an ElementTree implementation. Install python-elementtree or
+python-celementtree (included in Python 2.5) if you run into programs.
+
+The Makefile snippet obviously depends on the make utility. GNU/Make is known
+to work.
+
+
 Issues, problems, and feedback
 ==============================
 
