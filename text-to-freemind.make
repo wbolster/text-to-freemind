@@ -1,23 +1,47 @@
-#!/usr/bin/make -s
+#!/usr/bin/make -f
 #
-# Tranform tab indented text documents into Freemind XML
+# This program converts tab-indented text files into an XML format suitable for
+# reading by Freemind.
 #
-# Copyright (C) 2006  Wouter Bolsterlee <uws@xs4all.nl>
+# Copyright  2006--2007  Wouter Bolsterlee <uws@xs4all.nl>
+#
+# This program is distributed under the GPL v2 (or later) license.
+#
+
+
+#
+# Programs
 #
 
 CHMOD = chmod
-TXTMM = txt2mm
+TEXT_TO_FREEMIND = text-to-freemind
 
-TXT     = $(wildcard *.txt)
-MM      = $(TXT:%.txt=%.mm)
 
-.PHONY: mm clean-mm
+#
+# Files
+#
 
-%.mm: %.txt
-	$(TXTMM) $< |xmllint --format - > $@
-	@$(CHMOD) --reference=$< $@
+INPUT_TEXT = $(wildcard *.mm.txt)
+OUTPUT_MM =  $(INPUT_TEXT:%.mm.txt=%.mm)
 
-mm: $(MM)
 
-clean-mm: $(TXT)
-	$(RM) $(MM)
+#
+# Targets
+#
+
+.PHONY: all mm clean-mm
+
+# implicit conversion rule
+%.mm: %.mm.txt
+	$(TEXT_TO_FREEMIND) $< |xmllint --format - > $@
+	@-$(CHMOD) --reference=$< $@ 2>/dev/null
+
+# default target
+all: mm
+
+# convert text to freemind
+mm: $(OUTPUT_MM)
+
+# clean freemind files
+clean-mm: $(INPUT_TEXT)
+	$(RM) $(OUTPUT_MM)
