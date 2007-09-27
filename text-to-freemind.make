@@ -12,6 +12,7 @@
 
 CHMOD = chmod
 TEXT_TO_FREEMIND = text-to-freemind
+FREEMIND = freemind
 
 
 #
@@ -26,7 +27,7 @@ OUTPUT_MM =  $(INPUT_TEXT:%.mm.txt=%.mm)
 # Targets
 #
 
-.PHONY: all mm clean-mm
+.PHONY: all mm clean-mm test
 
 # implicit conversion rule
 %.mm: %.mm.txt
@@ -42,3 +43,7 @@ mm: $(OUTPUT_MM)
 # clean freemind files
 clean-mm: $(INPUT_TEXT)
 	$(RM) $(OUTPUT_MM)
+
+# preview files in Freemind
+test: $(OUTPUT_MM)
+	$(FREEMIND) $(OUTPUT_MM)
