@@ -82,6 +82,7 @@ def convert_lines_into_mm(lines, out_fp):
 
     curlevel = -1
     topnode = et.Element('map')
+    topnode.set('version', '0.8.0')
     curpath = [topnode]
     lastnode = None
     for level, line in lines_with_level:
