@@ -130,4 +130,7 @@ if __name__ == '__main__':
         # stdin
         lines = [line for line in sys.stdin.readlines()]
 
+    # Decode UTF-8
+    lines = [line.decode('utf-8') for line in lines]
+
     convert_lines_into_mm(lines, sys.stdout)

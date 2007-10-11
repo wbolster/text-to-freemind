@@ -3,8 +3,8 @@ Text-to-Freemind
 
 A simple text to freemind conversion program
 
-This program converts tab-indented text files into an XML format suitable for
-display by Freemind. It was written out of annoyance with the Freemind user
+This program converts tab-indented UTF-8 text files into an XML format suitable
+for display by Freemind. It was written out of annoyance with the Freemind user
 interface, and the lack of 'merging' capabilities when collaborating with other
 people.
 
