@@ -5,14 +5,17 @@
 # See README for copyright and licensing information.
 #
 
-import sys, time
+import sys, time, encodings
 
 
 def bailout(msg, line=None):
+    global filename
+    if filename == '-':
+        filename = '<stdin>'
     if line is not None:
-        sys.stderr.write('Error (line %d): %s\n' % (line, msg))
+        sys.stderr.write('%s:%d: %s\n' % (filename, line, msg))
     else:
-        sys.stderr.write('Error: %s\n' % msg)
+        sys.stderr.write('%s: %s\n' % (filename, msg))
     sys.exit(1)
 
 
@@ -114,6 +117,7 @@ def convert_lines_into_mm(lines, out_fp):
 
 
 if __name__ == '__main__':
+    global filename
     try:
         filename = sys.argv[1]
         if filename == '-':
