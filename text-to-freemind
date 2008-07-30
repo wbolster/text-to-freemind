@@ -52,6 +52,10 @@ def indent(elem, level=0):
             elem.tail = i
 
 def set_node_properties(node, text):
+    # convert literal \n into newlines
+    if r'\n' in text:
+        text = text.replace(r'\n', '\n')
+
     node.set('TEXT', text)
     node.set('CREATED', creation_time)
     node.set('MODIFIED', creation_time)
