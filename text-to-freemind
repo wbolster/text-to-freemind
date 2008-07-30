@@ -37,6 +37,20 @@ except NameError:
 
 creation_time = str(int(time.time() * 1000))
 
+def indent(elem, level=0):
+    # Indentation helper from http://effbot.org/zone/element-lib.htm
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        for elem in elem:
+            indent(elem, level+1)
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+
 def set_node_properties(node, text):
     node.set('TEXT', text)
     node.set('CREATED', creation_time)
@@ -111,10 +125,10 @@ def convert_lines_into_mm(lines, out_fp):
             
         curlevel = level
 
+    indent(topnode)
     tree = et.ElementTree(topnode)
     tree.write(out_fp, 'utf-8')
     out_fp.write('\n')
-
 
 if __name__ == '__main__':
     global filename

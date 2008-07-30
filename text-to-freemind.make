@@ -31,7 +31,7 @@ OUTPUT_MM =  $(INPUT_TEXT:%.mm.txt=%.mm)
 
 # implicit conversion rule
 %.mm: %.mm.txt
-	$(TEXT_TO_FREEMIND) $< |xmllint --format - > $@
+	$(TEXT_TO_FREEMIND) $< > $@
 	@-$(CHMOD) --reference=$< $@ 2>/dev/null
 
 # default target
