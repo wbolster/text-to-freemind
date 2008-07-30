@@ -1,0 +1,10 @@
+Root node
+	First level
+		Subnode
+			Subsubnode
+				Subsubsubnode
+		Subnode
+	Another first level
+		Subnode with some longer text
+		Another subnode with even longer text,\nbut fortunately it can be wrapped onto\nmultiple lines.
+
