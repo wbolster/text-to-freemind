@@ -46,4 +46,4 @@ clean-mm: $(INPUT_TEXT)
 
 # preview files in Freemind
 test: $(OUTPUT_MM)
-	$(FREEMIND) $(OUTPUT_MM) > /dev/null 2>&1 
+	$(FREEMIND) $(OUTPUT_MM) > /dev/null 2>&1 &
