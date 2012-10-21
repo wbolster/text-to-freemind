@@ -16,25 +16,27 @@ This program is distributed under the GPL v2 (or later) license.
 Usage
 =====
 
-To convert a single text file into a Freemind file, use:
+To convert a single text file into a Freemind file, use::
 
-  $ text-to-freemind input-file.txt.mm > output-file.mm
+    $ text-to-freemind input-file.txt.mm > output-file.mm
 
-You can use it as a filter (using shell pipes) as well:
+You can use it as a filter (using shell pipes) as well::
 
-  $ cat some-text-data.mm.txt | text-to-freemind > output-file.mm
+    $ cat some-text-data.mm.txt | text-to-freemind > output-file.mm
 
-A Makefile snippet is also included to convert all *.mm.txt files into their
-*.mm counterparts. First copy or symlink the makefile, than run make.
+A Makefile snippet is also included to convert all ``*.mm.txt`` files into their
+``*.mm`` counterparts. First copy or symlink the makefile, than run make::
 
-  $ cp /path/to/text-to-freemind/text-to-freemind.make Makefile
-  $ make
+    $ cp /path/to/text-to-freemind/text-to-freemind.make Makefile
+    $ make
 
-  Alternatively:
+Alternatively::
+
   $ ln -s /path/to/text-to-freemind/text-to-freemind.make Makefile
   $ make
 
-  Or execute the makefile directly if you don't want to copy files around:
+Or execute the makefile directly if you don't want to copy files around::
+
   $ /path/to/text-to-freemind/text-to-freemind.make
 
 
