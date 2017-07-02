@@ -103,7 +103,7 @@ def convert_lines_into_mm(lines, out_fp):
 
     curlevel = -1
     topnode = et.Element('map')
-    topnode.set('version', '0.8.0')
+    topnode.set('version', '1.0.1')
     curpath = [topnode]
     lastnode = None
     for level, line in lines_with_level:
@@ -126,7 +126,7 @@ def convert_lines_into_mm(lines, out_fp):
             n = et.SubElement(curpath[-1], 'node')
             curpath.append(n)
             set_node_properties(n, line)
-            
+
         curlevel = level
 
     indent(topnode)
