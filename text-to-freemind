@@ -5,7 +5,7 @@
 # See README for copyright and licensing information.
 #
 
-import sys, time, encodings
+import sys, time, encodings, re
 
 
 def bailout(msg, line=None):
@@ -51,10 +51,24 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
-def set_node_properties(node, text):
+def set_node_properties(node, text):  
     # convert literal \n into newlines
     if r'\n' in text:
         text = text.replace(r'\n', '\n')
+
+    # parse line for markdown url links
+    if r'[' in text and r'](' in text and r']' in text: # find [text](link) formatted markdown
+        match = re.search("\[(\w.*)\]\((\w.*)\)$", text)
+        if match:
+            text = match.group(1) 
+            link = match.group(2) 
+            node.set('LINK', link)
+    elif r'<' in text and r'>' in text:                 # find <link> formatted markdown
+        match = re.search("\<(\w.*)\>$", text)
+        if match:
+            text = match.group(1) 
+            link = match.group(1) 
+            node.set('LINK', link)
 
     node.set('TEXT', text)
     node.set('CREATED', creation_time)

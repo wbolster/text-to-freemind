@@ -3,8 +3,10 @@ Root node
 		Subnode
 			Subsubnode
 				Subsubsubnode
+				[Markdown link](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links)
 		Subnode
 	Another first level
 		Subnode with some longer text
 		Another subnode with even longer text,\nbut fortunately it can be wrapped onto\nmultiple lines.
+		<https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links>
 
